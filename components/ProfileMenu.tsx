@@ -22,7 +22,7 @@ import {
   Sun,
   Monitor,
 } from "lucide-react";
-import { useTheme } from "./theme-provider";
+import { useTheme } from "next-themes";
 
 export type MenuItem = { 
   label: string; 
@@ -59,7 +59,7 @@ export default function ProfileMenu({
   items = defaultItems, 
   user = defaultUser 
 }: ProfileMenuProps) {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
 
   const getThemeIcon = () => {
     switch (theme) {
@@ -69,6 +69,27 @@ export default function ProfileMenu({
         return <Moon className="h-4 w-4" />;
       default:
         return <Monitor className="h-4 w-4" />;
+    }
+  };
+
+  const getThemeLabel = () => {
+    switch (theme) {
+      case "light":
+        return "Switch to Dark";
+      case "dark":
+        return "Switch to System";
+      default:
+        return "Switch to Light";
+    }
+  };
+
+  const cycleTheme = () => {
+    if (theme === "light") {
+      setTheme("dark");
+    } else if (theme === "dark") {
+      setTheme("system");
+    } else {
+      setTheme("light");
     }
   };
 
@@ -110,11 +131,9 @@ export default function ProfileMenu({
         <DropdownMenuSeparator />
         
         {/* Theme Toggle */}
-        <DropdownMenuItem onClick={() => setTheme(theme === "light" ? "dark" : theme === "dark" ? "system" : "light")}>
+        <DropdownMenuItem onClick={cycleTheme}>
           {getThemeIcon()}
-          <span className="ml-2">
-            {theme === "light" ? "Switch to Dark" : theme === "dark" ? "Switch to System" : "Switch to Light"}
-          </span>
+          <span className="ml-2">{getThemeLabel()}</span>
         </DropdownMenuItem>
         
         <DropdownMenuSeparator />

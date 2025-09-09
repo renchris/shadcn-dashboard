@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import NavTabs from "../components/NavTabs";
 import ProfileMenu from "../components/ProfileMenu";
-import { ThemeProvider } from "../components/theme-provider";
+import { ThemeProvider } from "next-themes";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,27 +29,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                if (localStorage.getItem('ui-theme') === 'dark' || (!localStorage.getItem('ui-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                  document.documentElement.classList.add('dark')
-                } else {
-                  document.documentElement.classList.remove('dark')
-                }
-              } catch (e) {}
-            `,
-          }}
-        />
-      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider
+          attribute="class"
           defaultTheme="system"
-          storageKey="ui-theme"
+          enableSystem
+          disableTransitionOnChange
         >
           <div className="min-h-screen flex flex-col">
             <header className="sticky top-0 z-50 border-b border-foreground/10 bg-background/80 backdrop-blur">
