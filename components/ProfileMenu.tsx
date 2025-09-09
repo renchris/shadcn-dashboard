@@ -18,7 +18,11 @@ import {
   Bell,
   LogOut,
   Star,
+  Moon,
+  Sun,
+  Monitor,
 } from "lucide-react";
+import { useTheme } from "./theme-provider";
 
 export type MenuItem = { 
   label: string; 
@@ -55,6 +59,19 @@ export default function ProfileMenu({
   items = defaultItems, 
   user = defaultUser 
 }: ProfileMenuProps) {
+  const { theme, setTheme } = useTheme();
+
+  const getThemeIcon = () => {
+    switch (theme) {
+      case "light":
+        return <Sun className="h-4 w-4" />;
+      case "dark":
+        return <Moon className="h-4 w-4" />;
+      default:
+        return <Monitor className="h-4 w-4" />;
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -90,6 +107,16 @@ export default function ProfileMenu({
             </Link>
           </DropdownMenuItem>
         ))}
+        <DropdownMenuSeparator />
+        
+        {/* Theme Toggle */}
+        <DropdownMenuItem onClick={() => setTheme(theme === "light" ? "dark" : theme === "dark" ? "system" : "light")}>
+          {getThemeIcon()}
+          <span className="ml-2">
+            {theme === "light" ? "Switch to Dark" : theme === "dark" ? "Switch to System" : "Switch to Light"}
+          </span>
+        </DropdownMenuItem>
+        
         <DropdownMenuSeparator />
         <DropdownMenuItem variant="destructive" asChild>
           <Link href="/sign-out">
