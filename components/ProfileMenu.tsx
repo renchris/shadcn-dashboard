@@ -1,93 +1,104 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  User,
+  Settings,
+  CreditCard,
+  Bell,
+  LogOut,
+  Star,
+} from "lucide-react";
 
-export type MenuItem = { label: string; href: string };
+export type MenuItem = { 
+  label: string; 
+  href: string; 
+  icon?: React.ReactNode;
+  variant?: "default" | "destructive";
+};
 
 type ProfileMenuProps = {
   items?: MenuItem[];
+  user?: {
+    name?: string;
+    email?: string;
+    avatar?: string;
+    initials?: string;
+  };
 };
 
 const defaultItems: MenuItem[] = [
-  { label: "Profile", href: "/profile" },
-  { label: "Settings", href: "/settings" },
-  { label: "Sign out", href: "/sign-out" },
+  { label: "Profile", href: "/profile", icon: <User className="h-4 w-4" /> },
+  { label: "Account", href: "/account", icon: <Settings className="h-4 w-4" /> },
+  { label: "Billing", href: "/billing", icon: <CreditCard className="h-4 w-4" /> },
+  { label: "Notifications", href: "/notifications", icon: <Bell className="h-4 w-4" /> },
 ];
 
-export default function ProfileMenu({ items = defaultItems }: ProfileMenuProps) {
-  const [open, setOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement | null>(null);
+const defaultUser = {
+  name: "shadcn",
+  email: "m@example.com",
+  avatar: "",
+  initials: "SC"
+};
 
-  useEffect(() => {
-    function onClickOutside(event: MouseEvent) {
-      if (
-        open &&
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setOpen(false);
-      }
-    }
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpen(false);
-    }
-    document.addEventListener("mousedown", onClickOutside);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", onClickOutside);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [open]);
-
+export default function ProfileMenu({ 
+  items = defaultItems, 
+  user = defaultUser 
+}: ProfileMenuProps) {
   return (
-    <div ref={containerRef} className="relative">
-      <button
-        type="button"
-        aria-haspopup="menu"
-        aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
-        className="h-9 w-9 inline-flex items-center justify-center rounded-full bg-foreground/10 text-foreground/80 hover:bg-foreground/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground/40"
-      >
-        <span className="sr-only">Open user menu</span>
-        {/* Simple user glyph */}
-        <svg
-          aria-hidden
-          viewBox="0 0 24 24"
-          fill="none"
-          className="h-5 w-5"
-        >
-          <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5" />
-          <path
-            d="M4 20c1.5-3.5 5-5.5 8-5.5s6.5 2 8 5.5"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-        </svg>
-      </button>
-
-      {open ? (
-        <div
-          role="menu"
-          className="absolute right-0 mt-2 w-44 overflow-hidden rounded-md border border-foreground/10 bg-background shadow-lg"
-        >
-          <ul className="py-1">
-            {items.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="block px-3 py-2 text-sm text-foreground/80 hover:bg-foreground/5 hover:text-foreground"
-                  onClick={() => setOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+          <Avatar className="h-9 w-9">
+            <AvatarImage src={user.avatar} alt={user.name} />
+            <AvatarFallback className="bg-foreground/10 text-foreground/80">
+              {user.initials}
+            </AvatarFallback>
+          </Avatar>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="end" forceMount>
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm font-medium leading-none">{user.name}</p>
+            <p className="text-xs leading-none text-muted-foreground">
+              {user.email}
+            </p>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
+          <Star className="mr-2 h-4 w-4" />
+          <span>Upgrade to Pro</span>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        {items.map((item) => (
+          <DropdownMenuItem key={item.href} asChild>
+            <Link href={item.href}>
+              {item.icon && <span className="mr-2">{item.icon}</span>}
+              <span>{item.label}</span>
+            </Link>
+          </DropdownMenuItem>
+        ))}
+        <DropdownMenuSeparator />
+        <DropdownMenuItem variant="destructive" asChild>
+          <Link href="/sign-out">
+            <LogOut className="mr-2 h-4 w-4" />
+            <span>Log out</span>
+          </Link>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
