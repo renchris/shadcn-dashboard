@@ -77,7 +77,25 @@ export default function Home() {
           <StatCard href="/section-c" title="Active Projects" value={12} caption="3 new this week" trend={{ direction: "up", label: "Growing steadily" }} />
         </div>
 
-        <div className="mt-6 flex items-center justify-between">
+        {/* View all link under stats */}
+        <div className="mt-3 flex justify-end">
+          <Link
+            href="/section-a"
+            className="group inline-flex items-center gap-1 px-1 py-1 text-sm font-medium text-foreground/80 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 rounded-md"
+          >
+            <span className="transition-colors duration-300">View All</span>
+            <svg
+              className="h-4 w-4 opacity-0 translate-x-0 self-center will-change-transform transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0.5 group-hover:opacity-100"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden
+            >
+              <path d="M7.293 14.707a1 1 0 0 1 0-1.414L10.586 10 7.293 6.707a1 1 0 1 1 1.414-1.414l4 4a1 1 0 0 1 0 1.414l-4 4a1 1 0 0 1-1.414 0Z" />
+            </svg>
+          </Link>
+        </div>
+
+        <div className="mt-4 flex items-center justify-between">
           <h2 className="text-sm font-semibold tracking-wide text-foreground/70 uppercase">Ongoing Works</h2>
           <button className="text-sm text-primary hover:underline">+ New</button>
         </div>
