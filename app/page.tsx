@@ -43,13 +43,13 @@ export default function Home() {
         aria-label="Top banner"
       >
         {/* Full-bleed wrapper breaks out of page container */}
-        <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] -mt-px w-screen overflow-hidden text-white ring-1 ring-white/10">
+        <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] -mt-px w-screen overflow-hidden text-foreground ring-1 ring-black/10 dark:text-white dark:ring-white/10">
           <GradientBanner />
           <div className="relative z-10 mx-auto max-w-6xl px-6 py-12 lg:py-14 flex items-center justify-between">
             <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">{pageTitle}</h1>
             <Link
               href={bannerButton.destination}
-              className="inline-flex items-center rounded-md bg-white/10 px-4 py-2 text-sm font-medium ring-1 ring-inset ring-white/30 hover:bg-white/20 backdrop-blur-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              className="inline-flex items-center rounded-md px-4 py-2 text-sm font-medium ring-1 ring-inset backdrop-blur-sm transition-colors focus:outline-none focus-visible:ring-2 dark:bg-white/10 dark:ring-white/30 dark:hover:bg-white/20 bg-black/5 ring-black/20 hover:bg-black/10"
             >
               {bannerButton.label}
             </Link>
