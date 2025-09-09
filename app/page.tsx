@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import AnimatedGradient from "@/components/background/AnimatedGradient";
+import GradientBanner from "@/components/background/GradientBanner";
 
 type StatusRow = {
   sectionName: string;
@@ -44,9 +44,7 @@ export default function Home() {
       >
         {/* Full-bleed wrapper breaks out of page container */}
         <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] -mt-px w-screen overflow-hidden text-white ring-1 ring-white/10">
-          <span className="absolute inset-0 z-0 pointer-events-none bg-[#ff592f]">
-            <AnimatedGradient colors={["#FF0000", "#FF4500", "#FF9900"]} speed={10} blur="medium" />
-          </span>
+          <GradientBanner />
           <div className="relative z-10 mx-auto max-w-6xl px-6 py-12 lg:py-14 flex items-center justify-between">
             <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">{pageTitle}</h1>
             <Link
