@@ -131,7 +131,12 @@ export default function ProfileMenu({
         <DropdownMenuSeparator />
         
         {/* Theme Toggle */}
-        <DropdownMenuItem onClick={cycleTheme}>
+        <DropdownMenuItem 
+          onSelect={(event) => {
+            event.preventDefault();
+            cycleTheme();
+          }}
+        >
           {getThemeIcon()}
           <span className="ml-2">{getThemeLabel()}</span>
         </DropdownMenuItem>
