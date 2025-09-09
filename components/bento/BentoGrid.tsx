@@ -27,7 +27,7 @@ interface BentoCardProps {
 }
 
 export function BentoCard({ children, className, spanClassName }: BentoCardProps) {
-  return <div className={cn("bg-card rounded-2xl border border-border p-5 sm:p-6", spanClassName, className)}>{children}</div>;
+  return <div className={cn("bg-card rounded-2xl border border-border p-5 sm:p-6 transition-shadow transition-colors duration-200 hover:border-foreground/15 hover:shadow-[0_6px_14px_-12px_rgba(0,0,0,0.12)] dark:hover:shadow-[0_6px_14px_-12px_rgba(0,0,0,0.28)]", spanClassName, className)}>{children}</div>;
 }
 
 export default BentoGrid;

@@ -17,7 +17,7 @@ export default function GradientBanner() {
         "absolute inset-0 z-0 pointer-events-none " +
         (isDark
           ? "bg-gradient-to-r from-[#0b1b3f] via-[#1e3a8a] to-[#4c1d95]"
-          : "bg-gradient-to-r from-[#93c5fd] via-[#c4b5fd] to-[#f5c2d8]")
+          : "bg-gradient-to-r from-[#e7f0ff] via-[#efe7ff] to-[#ffe9f1]")
       }
     >
       {isDark ? (
