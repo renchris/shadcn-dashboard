@@ -44,7 +44,7 @@ export default function NavTabs() {
                 <motion.span
                   layoutId="nav-underline"
                   className="absolute left-0 -bottom-0.5 h-[2px] w-full bg-foreground"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.3 }}
+                  transition={{ type: "spring", bounce: 0.175, duration: 0.6 }}
                 />
               ) : null}
             </div>
