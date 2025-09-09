@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import AnimatedGradient from "@/components/background/AnimatedGradient";
 
 type StatusRow = {
   sectionName: string;
@@ -42,8 +43,13 @@ export default function Home() {
         aria-label="Top banner"
       >
         {/* Full-bleed wrapper breaks out of page container */}
-        <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] -mt-px w-screen bg-gradient-to-r from-[#0d1b2a] via-[#4a3b86] to-[#ff3cac] text-white ring-1 ring-white/10">
-          <div className="mx-auto max-w-6xl px-6 py-12 lg:py-14 flex items-center justify-between">
+        <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] -mt-px w-screen overflow-hidden text-white ring-1 ring-white/10">
+          <AnimatedGradient
+            colors={["#0d1b2a", "#4a3b86", "#ff3cac"]}
+            speed={8}
+            blur="heavy"
+          />
+          <div className="relative z-10 mx-auto max-w-6xl px-6 py-12 lg:py-14 flex items-center justify-between">
             <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">{pageTitle}</h1>
             <Link
               href={bannerButton.destination}
