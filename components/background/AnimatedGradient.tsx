@@ -2,7 +2,6 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { useDimensions } from "@/hooks/use-dimensions";
 
 interface AnimatedGradientProps {
   colors: string[];
@@ -24,17 +23,50 @@ const AnimatedGradient: React.FC<AnimatedGradientProps> = ({
   opacity = 0.35,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const dimensions = useDimensions(containerRef);
   const [isMounted, setIsMounted] = useState(false);
 
+  // Mount flag to avoid SSR hydration mismatch
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  const circleSize = useMemo(
-    () => Math.max(dimensions.width, dimensions.height),
-    [dimensions.width, dimensions.height]
-  );
+  // Update a CSS variable with the container's max dimension without triggering React re-renders
+  useEffect(() => {
+    const node = containerRef.current;
+    if (!node) return;
+
+    const updateVar = () => {
+      const rect = node.getBoundingClientRect();
+      const maxDim = Math.max(rect.width, rect.height);
+      node.style.setProperty("--cg-max", `${maxDim}px`);
+    };
+
+    updateVar();
+    const resizeObserver = new ResizeObserver(() => {
+      // Batch with rAF to avoid layout thrash
+      requestAnimationFrame(updateVar);
+    });
+    resizeObserver.observe(node);
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  // Generate stable random seeds for each color so re-renders do not reshuffle positions/sizes
+  const seeds = useMemo(() => {
+    return colors.map(() => ({
+      sizeMultiplier: randomInt(5, 15) / 10, // 0.5 .. 1.5
+      topPercent: Math.random() * 50, // 0 .. 50
+      leftPercent: Math.random() * 50, // 0 .. 50
+      tx1: (Math.random() - 0.5) * movementScale,
+      ty1: (Math.random() - 0.5) * movementScale,
+      tx2: (Math.random() - 0.5) * movementScale,
+      ty2: (Math.random() - 0.5) * movementScale,
+      tx3: (Math.random() - 0.5) * movementScale,
+      ty3: (Math.random() - 0.5) * movementScale,
+      tx4: (Math.random() - 0.5) * movementScale,
+      ty4: (Math.random() - 0.5) * movementScale,
+    }));
+    // Recalculate only if the color list identity changes or movement scale changes
+  }, [colors, movementScale]);
 
   const blurClass =
     blur === "light" ? "blur-2xl" : blur === "medium" ? "blur-3xl" : "blur-[100px]";
@@ -47,29 +79,31 @@ const AnimatedGradient: React.FC<AnimatedGradientProps> = ({
     <div ref={containerRef} className="absolute inset-0 overflow-hidden">
       <div className={cn("absolute inset-0", blurClass)} style={{ opacity }}>
         {colors.map((color, index) => {
-          const animationProps = {
+          const seed = seeds[index] ?? seeds[0];
+          type CSSWithVars = React.CSSProperties & { [key: string]: string | number | undefined };
+          const style: CSSWithVars = {
             animation: `background-gradient ${speed}s infinite ease-in-out`,
             animationDuration: `${speed}s`,
-            top: `${Math.random() * 50}%`,
-            left: `${Math.random() * 50}%`,
-            "--tx-1": (Math.random() - 0.5) * movementScale,
-            "--ty-1": (Math.random() - 0.5) * movementScale,
-            "--tx-2": (Math.random() - 0.5) * movementScale,
-            "--ty-2": (Math.random() - 0.5) * movementScale,
-            "--tx-3": (Math.random() - 0.5) * movementScale,
-            "--ty-3": (Math.random() - 0.5) * movementScale,
-            "--tx-4": (Math.random() - 0.5) * movementScale,
-            "--ty-4": (Math.random() - 0.5) * movementScale,
-          } as React.CSSProperties;
+            top: `${seed.topPercent}%`,
+            left: `${seed.leftPercent}%`,
+            width: `calc(var(--cg-max, 0px) * ${seed.sizeMultiplier})`,
+            height: `calc(var(--cg-max, 0px) * ${seed.sizeMultiplier})`,
+            "--tx-1": seed.tx1,
+            "--ty-1": seed.ty1,
+            "--tx-2": seed.tx2,
+            "--ty-2": seed.ty2,
+            "--tx-3": seed.tx3,
+            "--ty-3": seed.ty3,
+            "--tx-4": seed.tx4,
+            "--ty-4": seed.ty4,
+          };
 
           return (
             <svg
               key={index}
               className={cn("absolute", "animate-background-gradient")}
-              width={circleSize * randomInt(0.5, 1.5)}
-              height={circleSize * randomInt(0.5, 1.5)}
               viewBox="0 0 100 100"
-              style={animationProps}
+              style={style}
             >
               <circle cx="50" cy="50" r="50" fill={color} />
             </svg>

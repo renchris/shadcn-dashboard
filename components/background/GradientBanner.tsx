@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTheme } from "next-themes";
 import AnimatedGradient from "@/components/background/AnimatedGradient";
 
@@ -10,6 +10,10 @@ export default function GradientBanner() {
   useEffect(() => setMounted(true), []);
 
   const isDark = mounted ? resolvedTheme === "dark" : false;
+
+  // Keep color array identities stable to avoid reshuffling animations on re-render
+  const darkColors = useMemo(() => ["#3b82f6", "#22d3ee", "#8b5cf6"], []);
+  const lightColors = useMemo(() => ["#60a5fa", "#a78bfa", "#f472b6"], []);
 
   return (
     <span
@@ -22,7 +26,7 @@ export default function GradientBanner() {
     >
       {isDark ? (
         <AnimatedGradient
-          colors={["#3b82f6", "#22d3ee", "#8b5cf6"]}
+          colors={darkColors}
           speed={20}
           blur="heavy"
           movementScale={0.035}
@@ -30,7 +34,7 @@ export default function GradientBanner() {
         />
       ) : (
         <AnimatedGradient
-          colors={["#60a5fa", "#a78bfa", "#f472b6"]}
+          colors={lightColors}
           speed={20}
           blur="heavy"
           movementScale={0.028}

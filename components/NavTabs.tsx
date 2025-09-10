@@ -37,6 +37,7 @@ export default function NavTabs() {
                     ? "text-foreground"
                     : "text-foreground/60 hover:text-foreground")
                 }
+                prefetch
               >
                 {tab.label}
               </Link>
